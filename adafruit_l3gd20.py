@@ -35,7 +35,7 @@ Implementation Notes
 
 **Hardware:**
 
-* `L3GD20H Triple-Axis Gyro Breakout Board - L3GD20/L3G4200 <https://www.adafruit.com/product/1032>`_
+* `L3GD20H Triple-Axis Gyro Breakout Board <https://www.adafruit.com/product/1032>`_
 
 **Software and Dependencies:**
 
@@ -54,6 +54,10 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_l3gd20.git"
 
 from micropython import const
 from adafruit_register.i2c_struct import Struct
+try:
+    from struct import unpack
+except ImportError:
+    from ustruct import unpack
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_L3GD20.git"
@@ -83,9 +87,6 @@ class L3GD20: # pylint: disable=no-member
     :param int rng: a range value one of L3DS20_RANGE_250DPS, L3DS20_RANGE_500DPS, or
         L3DS20_RANGE_2000DPS
     """
-
-    acceleration_raw = Struct((_L3GD20_REGISTER_OUT_X_L | 0x80), '<hhh')
-    """Gives the raw acceleration readings, in units of the scaled mdps."""
 
     def __init__(self, rng):
         chip_id = self.read_register(_ID_REGISTER)
@@ -194,6 +195,10 @@ class L3GD20_I2C(L3GD20):
         L3DS20_RANGE_2000DPS
     :param address: the optional device address, 0x68 is the default address
     """
+
+    acceleration_raw = Struct((_L3GD20_REGISTER_OUT_X_L | 0x80), '<hhh')
+    """Gives the raw acceleration readings, in units of the scaled mdps."""
+
     def __init__(self, i2c, rng=L3DS20_RANGE_250DPS, address=0x6B):
         import adafruit_bus_device.i2c_device as i2c_device
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
@@ -237,6 +242,8 @@ class L3GD20_SPI(L3GD20):
     def __init__(self, spi_busio, cs, rng=L3DS20_RANGE_250DPS, baudrate=100000):
         import adafruit_bus_device.spi_device as spi_device
         self._spi = spi_device.SPIDevice(spi_busio, cs, baudrate=baudrate)
+        self._spi_bytearray1 = bytearray(1)
+        self._spi_bytearray6 = bytearray(6)
         super().__init__(rng)
 
     def write_register(self, register, value):
@@ -258,8 +265,28 @@ class L3GD20_SPI(L3GD20):
         """
         register = (register | 0x80) & 0xFF  # Read single, bit 7 high.
         with self._spi as spi:
-            spi.write(bytearray([register]))
-            result = bytearray(1)
-            spi.readinto(result)
-            #print("$%02X => %s" % (register, [hex(i) for i in result]))
-            return result
+            self._spi_bytearray1[0] = register
+            spi.write(self._spi_bytearray1)
+            spi.readinto(self._spi_bytearray1)
+            print("$%02X => %s" % (register, [hex(i) for i in self._spi_bytearray1]))
+            return self._spi_bytearray1[0]
+
+    def read_bytes(self, register, buffer):
+        """
+        Low level register streem reading over SPI, returns a list of values
+
+        :param register: the register to read bytes
+        :param bytearray buffer: buffer to fill with data from stream
+        """
+        register = (register | 0x80) & 0xFF  # Read single, bit 7 high.
+        with self._spi as spi:
+            self._spi_bytearray1[0] = register
+            spi.write(self._spi_bytearray1)
+            spi.readinto(buffer)
+
+    @property
+    def acceleration_raw(self):
+        """Gives the raw acceleration readings, in units of the scaled mdps."""
+        buffer = self._spi_bytearray6
+        self.read_bytes((_L3GD20_REGISTER_OUT_X_L | 0x40), buffer)
+        return unpack('<hhh', buffer)

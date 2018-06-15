@@ -13,7 +13,7 @@ Introduction
     :target: https://travis-ci.org/adafruit/adafruit_CircuitPython_l3gd20
     :alt: Build Status
 
-.. todo:: Describe what the library does.
+Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - L3GD20 Driver
 
 Dependencies
 =============
