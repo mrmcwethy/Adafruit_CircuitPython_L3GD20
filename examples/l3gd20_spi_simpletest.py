@@ -16,4 +16,5 @@ while True:
 
     print()
 
+    #sleep for 1 second
     time.sleep(1)
