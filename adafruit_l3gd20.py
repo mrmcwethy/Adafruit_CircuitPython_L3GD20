@@ -68,7 +68,10 @@ L3DS20_RANGE_2000DPS = const(2)
 
 _L3GD20_REGISTER_CTRL_REG1 = const(0x20)
 _L3GD20_REGISTER_CTRL_REG4 = const(0x23)
-_L3GD20_REGISTER_OUT_X_L = const(0x28)
+
+# _L3GD20_REGISTER_OUT_X_L = const(0x28)
+_L3GD20_REGISTER_OUT_X_L_0x80 = const(0xA8)
+_L3GD20_REGISTER_OUT_X_L_0x40 = const(0x68)
 
 _ID_REGISTER = const(0x0F)
 
@@ -196,7 +199,7 @@ class L3GD20_I2C(L3GD20):
     :param address: the optional device address, 0x68 is the default address
     """
 
-    acceleration_raw = Struct((_L3GD20_REGISTER_OUT_X_L | 0x80), '<hhh')
+    acceleration_raw = Struct(_L3GD20_L3GD20_REGISTER_OUT_X_L_0x80, '<hhh')
     """Gives the raw acceleration readings, in units of the scaled mdps."""
 
     def __init__(self, i2c, rng=L3DS20_RANGE_250DPS, address=0x6B):
@@ -288,5 +291,5 @@ class L3GD20_SPI(L3GD20):
     def acceleration_raw(self):
         """Gives the raw acceleration readings, in units of the scaled mdps."""
         buffer = self._spi_bytearray6
-        self.read_bytes((_L3GD20_REGISTER_OUT_X_L | 0x40), buffer)
+        self.read_bytes(_L3GD20_L3GD20_REGISTER_OUT_X_L_0x40, buffer)
         return unpack('<hhh', buffer)
