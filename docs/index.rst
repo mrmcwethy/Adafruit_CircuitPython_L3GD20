@@ -28,6 +28,8 @@ Table of Contents
 .. toctree::
     :caption: Related Products
 
+    L3GD20H Triple-Axis Gyro Breakout Board <https://www.adafruit.com/product/1032>
+
 .. toctree::
     :caption: Other Links
 
