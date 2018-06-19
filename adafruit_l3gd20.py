@@ -68,7 +68,10 @@ L3DS20_RANGE_2000DPS = const(2)
 
 _L3GD20_REGISTER_CTRL_REG1 = const(0x20)
 _L3GD20_REGISTER_CTRL_REG4 = const(0x23)
-_L3GD20_REGISTER_OUT_X_L = const(0x28)
+
+# _L3GD20_REGISTER_OUT_X_L = const(0x28)
+_L3GD20_REGISTER_OUT_X_L_X80 = const(0xA8)
+_L3GD20_REGISTER_OUT_X_L_X40 = const(0x68)
 
 _ID_REGISTER = const(0x0F)
 
@@ -84,15 +87,21 @@ class L3GD20: # pylint: disable=no-member
     """
     Driver for the L3GD20 3-axis Gyroscope sensor.
 
-    :param int rng: a range value one of L3DS20_RANGE_250DPS, L3DS20_RANGE_500DPS, or
+    :param int rng: a range value one of L3DS20_RANGE_250DPS (default), L3DS20_RANGE_500DPS, or
         L3DS20_RANGE_2000DPS
     """
 
-    def __init__(self, rng):
+    def __init__(self, rng=L3DS20_RANGE_250DPS):
         chip_id = self.read_register(_ID_REGISTER)
         if chip_id != _L3GD20_CHIP_ID and chip_id != _L3GD20H_CHIP_ID:
             raise RuntimeError("bad chip id (%x != %x or %x)" %
                                (chip_id, _L3GD20_CHIP_ID, _L3GD20H_CHIP_ID))
+
+        if rng != L3DS20_RANGE_250DPS and \
+           rng != L3DS20_RANGE_500DPS and \
+           rng != L3DS20_RANGE_2000DPS:
+            raise ValueError("Range value must be one of L3DS20_RANGE_250DPS, "
+                             "L3DS20_RANGE_500DPS, or L3DS20_RANGE_2000DPS")
 
         # Set CTRL_REG1 (0x20)
         # ====================================================================
@@ -196,7 +205,7 @@ class L3GD20_I2C(L3GD20):
     :param address: the optional device address, 0x68 is the default address
     """
 
-    acceleration_raw = Struct((_L3GD20_REGISTER_OUT_X_L | 0x80), '<hhh')
+    acceleration_raw = Struct(_L3GD20_REGISTER_OUT_X_L_X80, '<hhh')
     """Gives the raw acceleration readings, in units of the scaled mdps."""
 
     def __init__(self, i2c, rng=L3DS20_RANGE_250DPS, address=0x6B):
@@ -219,7 +228,7 @@ class L3GD20_I2C(L3GD20):
 
     def read_register(self, register):
         """
-        Get a byte value from a register
+        Returns a byte value from a register
 
         :param register: the register to read a byte
         """
@@ -288,5 +297,5 @@ class L3GD20_SPI(L3GD20):
     def acceleration_raw(self):
         """Gives the raw acceleration readings, in units of the scaled mdps."""
         buffer = self._spi_bytearray6
-        self.read_bytes((_L3GD20_REGISTER_OUT_X_L | 0x40), buffer)
+        self.read_bytes(_L3GD20_REGISTER_OUT_X_L_X40, buffer)
         return unpack('<hhh', buffer)

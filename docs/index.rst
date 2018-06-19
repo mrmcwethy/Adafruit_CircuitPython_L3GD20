@@ -23,14 +23,12 @@ Table of Contents
 .. toctree::
     :caption: Tutorials
 
-.. todo:: Add any Learn guide links here. If there are none, then simply delete this todo and leave
-    the toctree above for use later.
+    Adafruit Triple Axis Gyro Breakout <https://learn.adafruit.com/adafruit-triple-axis-gyro-breakout>
 
 .. toctree::
     :caption: Related Products
 
-.. todo:: Add any product links here. If there are none, then simply delete this todo and leave
-    the toctree above for use later.
+    L3GD20H Triple-Axis Gyro Breakout Board <https://www.adafruit.com/product/1032>
 
 .. toctree::
     :caption: Other Links

@@ -4,8 +4,10 @@ import busio
 import adafruit_l3gd20
 import digitalio
 
+# define the spi conneciton
 CS = digitalio.DigitalInOut(D5)  # select pin is 5
 SPIB = busio.SPI(SCK, MOSI, MISO)
+# now initialize the device
 SENSOR = adafruit_l3gd20.L3GD20_SPI(SPIB, CS)
 
 while True:
@@ -14,4 +16,5 @@ while True:
 
     print()
 
+    #sleep for 1 second
     time.sleep(1)
