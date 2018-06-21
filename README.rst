@@ -9,8 +9,8 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-.. image:: https://travis-ci.org/adafruit/adafruit_CircuitPython_l3gd20.svg?branch=master
-    :target: https://travis-ci.org/adafruit/adafruit_CircuitPython_l3gd20
+.. image:: https://travis-ci.org/adafruit/Adafruit_CircuitPython_L3GD20.svg?branch=master
+    :target: https://travis-ci.org/adafruit/Adafruit_CircuitPython_L3GD20
     :alt: Build Status
 
 Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - L3GD20 Driver
