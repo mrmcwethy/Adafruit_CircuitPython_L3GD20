@@ -83,7 +83,8 @@ _L3GD20_SENSITIVITY_500DPS = 0.0175       ## Roughly 45/256
 _L3GD20_SENSITIVITY_2000DPS = 0.070        ## Roughly 18/256
 
 
-class L3GD20: # pylint: disable=no-member
+# pylint: disable=no-member
+class L3GD20:
     """
     Driver for the L3GD20 3-axis Gyroscope sensor.
 
@@ -92,6 +93,10 @@ class L3GD20: # pylint: disable=no-member
     """
 
     def __init__(self, rng=L3DS20_RANGE_250DPS):
+        # pylint: disable=consider-using-in
+        # This should be refactored to fix this pylint issue.
+        # Pylint error: Consider merging these comparisons with "in" to
+        # 'rng not in (L3DS20_RANGE_250DPS, L3DS20_RANGE_500DPS, L3DS20_RANGE_2000DPS)'
         chip_id = self.read_register(_ID_REGISTER)
         if chip_id != _L3GD20_CHIP_ID and chip_id != _L3GD20H_CHIP_ID:
             raise RuntimeError("bad chip id (%x != %x or %x)" %
@@ -209,8 +214,8 @@ class L3GD20_I2C(L3GD20):
     """Gives the raw acceleration readings, in units of the scaled mdps."""
 
     def __init__(self, i2c, rng=L3DS20_RANGE_250DPS, address=0x6B):
-        import adafruit_bus_device.i2c_device as i2c_device
-        self.i2c_device = i2c_device.I2CDevice(i2c, address)
+        import adafruit_bus_device.i2c_device as i2c_dev
+        self.i2c_device = i2c_dev.I2CDevice(i2c, address)
         self.buffer = bytearray(2)
         super().__init__(rng)
 
@@ -249,8 +254,8 @@ class L3GD20_SPI(L3GD20):
     :param baudrate: spi baud rate default is 100000
     """
     def __init__(self, spi_busio, cs, rng=L3DS20_RANGE_250DPS, baudrate=100000):
-        import adafruit_bus_device.spi_device as spi_device
-        self._spi = spi_device.SPIDevice(spi_busio, cs, baudrate=baudrate)
+        import adafruit_bus_device.spi_device as spi_dev
+        self._spi = spi_dev.SPIDevice(spi_busio, cs, baudrate=baudrate)
         self._spi_bytearray1 = bytearray(1)
         self._spi_bytearray6 = bytearray(6)
         super().__init__(rng)
