@@ -93,10 +93,6 @@ class L3GD20:
     """
 
     def __init__(self, rng=L3DS20_RANGE_250DPS):
-        # pylint: disable=consider-using-in
-        # This should be refactored to fix this pylint issue.
-        # Pylint error: Consider merging these comparisons with "in" to
-        # 'rng not in (L3DS20_RANGE_250DPS, L3DS20_RANGE_500DPS, L3DS20_RANGE_2000DPS)'
         chip_id = self.read_register(_ID_REGISTER)
         if chip_id != _L3GD20_CHIP_ID and chip_id != _L3GD20H_CHIP_ID:
             raise RuntimeError("bad chip id (%x != %x or %x)" %

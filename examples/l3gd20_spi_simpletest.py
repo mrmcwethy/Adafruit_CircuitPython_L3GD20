@@ -1,8 +1,8 @@
 import time
 from board import SCK, MISO, MOSI, D5
 import busio
-import adafruit_l3gd20
 import digitalio
+import adafruit_l3gd20
 
 # define the spi conneciton
 CS = digitalio.DigitalInOut(D5)  # select pin is 5
