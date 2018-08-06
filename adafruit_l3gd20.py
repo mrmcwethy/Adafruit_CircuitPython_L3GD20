@@ -83,7 +83,8 @@ _L3GD20_SENSITIVITY_500DPS = 0.0175       ## Roughly 45/256
 _L3GD20_SENSITIVITY_2000DPS = 0.070        ## Roughly 18/256
 
 
-class L3GD20: # pylint: disable=no-member
+# pylint: disable=no-member
+class L3GD20:
     """
     Driver for the L3GD20 3-axis Gyroscope sensor.
 
