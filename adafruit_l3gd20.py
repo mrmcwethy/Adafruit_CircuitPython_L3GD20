@@ -210,8 +210,8 @@ class L3GD20_I2C(L3GD20):
     """Gives the raw acceleration readings, in units of the scaled mdps."""
 
     def __init__(self, i2c, rng=L3DS20_RANGE_250DPS, address=0x6B):
-        import adafruit_bus_device.i2c_device as i2c_dev
-        self.i2c_device = i2c_dev.I2CDevice(i2c, address)
+        import adafruit_bus_device.i2c_device as i2c_device
+        self.i2c_device = i2c_device.I2CDevice(i2c, address)
         self.buffer = bytearray(2)
         super().__init__(rng)
 
@@ -250,8 +250,8 @@ class L3GD20_SPI(L3GD20):
     :param baudrate: spi baud rate default is 100000
     """
     def __init__(self, spi_busio, cs, rng=L3DS20_RANGE_250DPS, baudrate=100000):
-        import adafruit_bus_device.spi_device as spi_dev
-        self._spi = spi_dev.SPIDevice(spi_busio, cs, baudrate=baudrate)
+        import adafruit_bus_device.spi_device as spi_device
+        self._spi = spi_device.SPIDevice(spi_busio, cs, baudrate=baudrate)
         self._spi_bytearray1 = bytearray(1)
         self._spi_bytearray6 = bytearray(6)
         super().__init__(rng)
