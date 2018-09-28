@@ -14,6 +14,6 @@ SENSOR = adafruit_l3gd20.L3GD20_I2C(I2C)
 # SENSOR = adafruit_l3gd20.L3GD20_SPI(SPIB, CS)
 
 while True:
-    print('Acceleration (m/s^2): {}'.format(SENSOR.acceleration))
+    print('Angular Momentum (rad/s): {}'.format(SENSOR.gyro))
     print()
     time.sleep(1)

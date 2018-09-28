@@ -188,11 +188,12 @@ class L3GD20:
 
 
     @property
-    def acceleration(self):
+    def gyro(self):
         """
-        x, y, z acceleration tuple floats, rescaled appropriately for range selected
+        x, y, z angular momentum tuple floats, rescaled appropriately for
+        range selected
         """
-        raw = self.acceleration_raw
+        raw = self.gyro_raw
         return tuple(self.scale*v for v in raw)
 
 
@@ -206,8 +207,8 @@ class L3GD20_I2C(L3GD20):
     :param address: the optional device address, 0x68 is the default address
     """
 
-    acceleration_raw = Struct(_L3GD20_REGISTER_OUT_X_L_X80, '<hhh')
-    """Gives the raw acceleration readings, in units of the scaled mdps."""
+    gyro_raw = Struct(_L3GD20_REGISTER_OUT_X_L_X80, '<hhh')
+    """Gives the raw gyro readings, in units of rad/s."""
 
     def __init__(self, i2c, rng=L3DS20_RANGE_250DPS, address=0x6B):
         import adafruit_bus_device.i2c_device as i2c_device
@@ -283,7 +284,7 @@ class L3GD20_SPI(L3GD20):
 
     def read_bytes(self, register, buffer):
         """
-        Low level register streem reading over SPI, returns a list of values
+        Low level register stream reading over SPI, returns a list of values
 
         :param register: the register to read bytes
         :param bytearray buffer: buffer to fill with data from stream
@@ -295,8 +296,8 @@ class L3GD20_SPI(L3GD20):
             spi.readinto(buffer)
 
     @property
-    def acceleration_raw(self):
-        """Gives the raw acceleration readings, in units of the scaled mdps."""
+    def gyro_raw(self):
+        """Gives the raw gyro readings, in units of rad/s."""
         buffer = self._spi_bytearray6
         self.read_bytes(_L3GD20_REGISTER_OUT_X_L_X40, buffer)
         return unpack('<hhh', buffer)
