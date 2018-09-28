@@ -59,7 +59,7 @@ And then you can start reading the measurements:
 
 .. code:: python
 
-    print(sensor.acceleration)
+    print(sensor.gyro)
 
 Contributing
 ============
