@@ -279,7 +279,8 @@ class L3GD20_SPI(L3GD20):
             self._spi_bytearray1[0] = register
             spi.write(self._spi_bytearray1)
             spi.readinto(self._spi_bytearray1)
-            print("$%02X => %s" % (register, [hex(i) for i in self._spi_bytearray1]))
+            # Uncomment to dump bytearray:
+            # print("$%02X => %s" % (register, [hex(i) for i in self._spi_bytearray1]))
             return self._spi_bytearray1[0]
 
     def read_bytes(self, register, buffer):
