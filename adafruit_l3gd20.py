@@ -54,6 +54,7 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_l3gd20.git"
 
 from micropython import const
 from adafruit_register.i2c_struct import Struct
+
 try:
     from struct import unpack
 except ImportError:
@@ -78,9 +79,9 @@ _ID_REGISTER = const(0x0F)
 _L3GD20_CHIP_ID = const(0xD4)
 _L3GD20H_CHIP_ID = const(0xD7)
 
-_L3GD20_SENSITIVITY_250DPS = 0.00875      ## Roughly 22/256 for fixed point match
-_L3GD20_SENSITIVITY_500DPS = 0.0175       ## Roughly 45/256
-_L3GD20_SENSITIVITY_2000DPS = 0.070        ## Roughly 18/256
+_L3GD20_SENSITIVITY_250DPS = 0.00875  ## Roughly 22/256 for fixed point match
+_L3GD20_SENSITIVITY_500DPS = 0.0175  ## Roughly 45/256
+_L3GD20_SENSITIVITY_2000DPS = 0.070  ## Roughly 18/256
 
 
 # pylint: disable=no-member
@@ -94,15 +95,17 @@ class L3GD20:
 
     def __init__(self, rng=L3DS20_RANGE_250DPS):
         chip_id = self.read_register(_ID_REGISTER)
-        if chip_id != _L3GD20_CHIP_ID and chip_id != _L3GD20H_CHIP_ID:
-            raise RuntimeError("bad chip id (%x != %x or %x)" %
-                               (chip_id, _L3GD20_CHIP_ID, _L3GD20H_CHIP_ID))
+        if chip_id not in (_L3GD20_CHIP_ID, _L3GD20H_CHIP_ID):
+            raise RuntimeError(
+                "bad chip id (%x != %x or %x)"
+                % (chip_id, _L3GD20_CHIP_ID, _L3GD20H_CHIP_ID)
+            )
 
-        if rng != L3DS20_RANGE_250DPS and \
-           rng != L3DS20_RANGE_500DPS and \
-           rng != L3DS20_RANGE_2000DPS:
-            raise ValueError("Range value must be one of L3DS20_RANGE_250DPS, "
-                             "L3DS20_RANGE_500DPS, or L3DS20_RANGE_2000DPS")
+        if rng not in (L3DS20_RANGE_250DPS, L3DS20_RANGE_500DPS, L3DS20_RANGE_2000DPS):
+            raise ValueError(
+                "Range value must be one of L3DS20_RANGE_250DPS, "
+                "L3DS20_RANGE_500DPS, or L3DS20_RANGE_2000DPS"
+            )
 
         # Set CTRL_REG1 (0x20)
         # ====================================================================
@@ -186,7 +189,6 @@ class L3GD20:
         # Nothing to do ... keep default values
         # ------------------------------------------------------------------
 
-
     @property
     def gyro(self):
         """
@@ -194,7 +196,7 @@ class L3GD20:
         range selected
         """
         raw = self.gyro_raw
-        return tuple(self.scale*v for v in raw)
+        return tuple(self.scale * v for v in raw)
 
 
 class L3GD20_I2C(L3GD20):
@@ -207,11 +209,12 @@ class L3GD20_I2C(L3GD20):
     :param address: the optional device address, 0x68 is the default address
     """
 
-    gyro_raw = Struct(_L3GD20_REGISTER_OUT_X_L_X80, '<hhh')
+    gyro_raw = Struct(_L3GD20_REGISTER_OUT_X_L_X80, "<hhh")
     """Gives the raw gyro readings, in units of rad/s."""
 
     def __init__(self, i2c, rng=L3DS20_RANGE_250DPS, address=0x6B):
-        import adafruit_bus_device.i2c_device as i2c_device
+        import adafruit_bus_device.i2c_device as i2c_device  # pylint: disable=import-outside-toplevel
+
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
         self.buffer = bytearray(2)
         super().__init__(rng)
@@ -239,6 +242,7 @@ class L3GD20_I2C(L3GD20):
             i2c.write_then_readinto(self.buffer, self.buffer, out_end=1, in_start=1)
         return self.buffer[1]
 
+
 class L3GD20_SPI(L3GD20):
     """
     Driver for L3GD20 Gyroscope using SPI communications
@@ -249,8 +253,10 @@ class L3GD20_SPI(L3GD20):
         L3DS20_RANGE_2000DPS
     :param baudrate: spi baud rate default is 100000
     """
+
     def __init__(self, spi_busio, cs, rng=L3DS20_RANGE_250DPS, baudrate=100000):
-        import adafruit_bus_device.spi_device as spi_device
+        import adafruit_bus_device.spi_device as spi_device  # pylint: disable=import-outside-toplevel
+
         self._spi = spi_device.SPIDevice(spi_busio, cs, baudrate=baudrate)
         self._spi_bytearray1 = bytearray(1)
         self._spi_bytearray6 = bytearray(6)
@@ -300,4 +306,4 @@ class L3GD20_SPI(L3GD20):
         """Gives the raw gyro readings, in units of rad/s."""
         buffer = self._spi_bytearray6
         self.read_bytes(_L3GD20_REGISTER_OUT_X_L_X40, buffer)
-        return unpack('<hhh', buffer)
+        return unpack("<hhh", buffer)
