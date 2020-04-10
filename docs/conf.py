@@ -42,7 +42,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "Adafruit l3gd20 Library"
+project = "Adafruit L3GD20 Library"
 copyright = "2018 Michael McWethy"
 author = "Michael McWethy"
 
@@ -118,7 +118,7 @@ html_static_path = ["_static"]
 html_favicon = "_static/favicon.ico"
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "AdafruitL3gd20Librarydoc"
+htmlhelp_basename = "AdafruitL3GD20Librarydoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -143,8 +143,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "Adafruitl3gd20Library.tex",
-        "Adafruitl3gd20 Library Documentation",
+        "AdafruitL3GD20Library.tex",
+        "Adafruit L3GD20 Library Documentation",
         author,
         "manual",
     ),
@@ -157,8 +157,8 @@ latex_documents = [
 man_pages = [
     (
         master_doc,
-        "Adafruitl3gd20library",
-        "Adafruit l3gd20 Library Documentation",
+        "AdafruitL3GD20library",
+        "Adafruit L3GD20 Library Documentation",
         [author],
         1,
     )
@@ -172,10 +172,10 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "Adafruitl3gd20Library",
-        "Adafruit l3gd20 Library Documentation",
+        "AdafruitL3GD20Library",
+        "Adafruit L3GD20 Library Documentation",
         author,
-        "Adafruitl3gd20Library",
+        "AdafruitL3GD20Library",
         "One line description of project.",
         "Miscellaneous",
     ),
