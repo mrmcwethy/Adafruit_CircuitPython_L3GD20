@@ -67,10 +67,10 @@ L3DS20_RANGE_250DPS = const(0)
 L3DS20_RANGE_500DPS = const(1)
 L3DS20_RANGE_2000DPS = const(2)
 
-L3DS20_RATE_100Hz = const(0x00)
-L3DS20_RATE_200Hz = const(0x40)
-L3DS20_RATE_400Hz = const(0x80)
-L3DS20_RATE_800Hz = const(0xC0)
+L3DS20_RATE_100HZ = const(0x00)
+L3DS20_RATE_200HZ = const(0x40)
+L3DS20_RATE_400HZ = const(0x80)
+L3DS20_RATE_800HZ = const(0xC0)
 
 _L3GD20_REGISTER_CTRL_REG1 = const(0x20)
 _L3GD20_REGISTER_CTRL_REG4 = const(0x23)
@@ -96,12 +96,12 @@ class L3GD20:
 
     :param int rng: a range value one of L3DS20_RANGE_250DPS (default), L3DS20_RANGE_500DPS, or
         L3DS20_RANGE_2000DPS
-    
-    :param int rate: a rate value one of L3DS20_RATE_100Hz (default), L3DS20_RATE_200Hz, 
-        L3DS20_RATE_400Hz, or L3DS20_RATE_800Hz
+
+    :param int rate: a rate value one of L3DS20_RATE_100HZ (default), L3DS20_RATE_200HZ,
+        L3DS20_RATE_400HZ, or L3DS20_RATE_800HZ
     """
 
-    def __init__(self, rng=L3DS20_RANGE_250DPS, rate=L3DS20_RATE_100Hz):
+    def __init__(self, rng=L3DS20_RANGE_250DPS, rate=L3DS20_RATE_100HZ):
         chip_id = self.read_register(_ID_REGISTER)
         if chip_id not in (_L3GD20_CHIP_ID, _L3GD20H_CHIP_ID):
             raise RuntimeError(
@@ -222,7 +222,7 @@ class L3GD20_I2C(L3GD20):
     """Gives the raw gyro readings, in units of rad/s."""
 
     def __init__(
-        self, i2c, rng=L3DS20_RANGE_250DPS, rate=L3DS20_RATE_100Hz, address=0x6B
+        self, i2c, rng=L3DS20_RANGE_250DPS, rate=L3DS20_RATE_100HZ, address=0x6B
     ):
         import adafruit_bus_device.i2c_device as i2c_device  # pylint: disable=import-outside-toplevel
 
@@ -270,9 +270,9 @@ class L3GD20_SPI(L3GD20):
         spi_busio,
         cs,
         rng=L3DS20_RANGE_250DPS,
-        rate=L3DS20_RATE_100Hz,
+        rate=L3DS20_RATE_100HZ,
         baudrate=100000,
-    ):
+    ):  # pylint: disable=too-many-arguments
         import adafruit_bus_device.spi_device as spi_device  # pylint: disable=import-outside-toplevel
 
         self._spi = spi_device.SPIDevice(spi_busio, cs, baudrate=baudrate)
