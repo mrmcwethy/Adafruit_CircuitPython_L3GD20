@@ -197,6 +197,7 @@ class L3GD20:
 
         # Nothing to do ... keep default values
         # ------------------------------------------------------------------
+
     @property
     def gyro(self):
         """
@@ -220,7 +221,9 @@ class L3GD20_I2C(L3GD20):
     gyro_raw = Struct(_L3GD20_REGISTER_OUT_X_L_X80, "<hhh")
     """Gives the raw gyro readings, in units of rad/s."""
 
-    def __init__(self, i2c, rng=L3DS20_RANGE_250DPS, rate=L3DS20_RATE_100Hz, address=0x6B):
+    def __init__(
+        self, i2c, rng=L3DS20_RANGE_250DPS, rate=L3DS20_RATE_100Hz, address=0x6B
+    ):
         import adafruit_bus_device.i2c_device as i2c_device  # pylint: disable=import-outside-toplevel
 
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
@@ -250,6 +253,7 @@ class L3GD20_I2C(L3GD20):
             i2c.write_then_readinto(self.buffer, self.buffer, out_end=1, in_start=1)
         return self.buffer[1]
 
+
 class L3GD20_SPI(L3GD20):
     """
     Driver for L3GD20 Gyroscope using SPI communications
@@ -261,7 +265,14 @@ class L3GD20_SPI(L3GD20):
     :param baudrate: spi baud rate default is 100000
     """
 
-    def __init__(self, spi_busio, cs, rng=L3DS20_RANGE_250DPS, rate=L3DS20_RATE_100Hz, baudrate=100000):
+    def __init__(
+        self,
+        spi_busio,
+        cs,
+        rng=L3DS20_RANGE_250DPS,
+        rate=L3DS20_RATE_100Hz,
+        baudrate=100000,
+    ):
         import adafruit_bus_device.spi_device as spi_device  # pylint: disable=import-outside-toplevel
 
         self._spi = spi_device.SPIDevice(spi_busio, cs, baudrate=baudrate)
