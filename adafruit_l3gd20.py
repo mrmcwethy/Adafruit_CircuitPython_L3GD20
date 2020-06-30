@@ -221,7 +221,7 @@ class L3GD20_I2C(L3GD20):
     """Gives the raw gyro readings, in units of rad/s."""
 
     def __init__(
-        self, i2c, rng=L3DS20_RANGE_250DPS, rate=L3DS20_RATE_100HZ, address=0x6B
+        self, i2c, rng=L3DS20_RANGE_250DPS, address=0x6B, rate=L3DS20_RATE_100HZ
     ):
         import adafruit_bus_device.i2c_device as i2c_device  # pylint: disable=import-outside-toplevel
 
