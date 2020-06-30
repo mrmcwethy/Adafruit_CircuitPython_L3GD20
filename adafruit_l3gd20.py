@@ -127,8 +127,7 @@ class L3GD20:
         #     0  XEN       X-axis enable (0 = disabled, 1 = enabled)
 
         # Switch to normal mode and enable all three channels
-        # self.write_register(_L3GD20_REGISTER_CTRL_REG1, 0x0F)
-        self.write_register(_L3GD20_REGISTER_CTRL_REG1, rate + 0x0F)
+        self.write_register(_L3GD20_REGISTER_CTRL_REG1, rate | 0x0F)
 
         # Set CTRL_REG2 (0x21)
         # ====================================================================
@@ -270,8 +269,8 @@ class L3GD20_SPI(L3GD20):
         spi_busio,
         cs,
         rng=L3DS20_RANGE_250DPS,
-        rate=L3DS20_RATE_100HZ,
         baudrate=100000,
+        rate=L3DS20_RATE_100HZ,
     ):  # pylint: disable=too-many-arguments
         import adafruit_bus_device.spi_device as spi_device  # pylint: disable=import-outside-toplevel
 
