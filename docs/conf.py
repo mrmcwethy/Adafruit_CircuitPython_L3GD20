@@ -147,7 +147,7 @@ latex_documents = [
         "Adafruit L3GD20 Library Documentation",
         author,
         "manual",
-    ),
+    )
 ]
 
 # -- Options for manual page output ---------------------------------------
@@ -178,5 +178,5 @@ texinfo_documents = [
         "AdafruitL3GD20Library",
         "One line description of project.",
         "Miscellaneous",
-    ),
+    )
 ]

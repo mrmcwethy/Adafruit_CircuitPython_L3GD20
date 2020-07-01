@@ -67,6 +67,11 @@ L3DS20_RANGE_250DPS = const(0)
 L3DS20_RANGE_500DPS = const(1)
 L3DS20_RANGE_2000DPS = const(2)
 
+L3DS20_RATE_100HZ = const(0x00)
+L3DS20_RATE_200HZ = const(0x40)
+L3DS20_RATE_400HZ = const(0x80)
+L3DS20_RATE_800HZ = const(0xC0)
+
 _L3GD20_REGISTER_CTRL_REG1 = const(0x20)
 _L3GD20_REGISTER_CTRL_REG4 = const(0x23)
 
@@ -91,9 +96,12 @@ class L3GD20:
 
     :param int rng: a range value one of L3DS20_RANGE_250DPS (default), L3DS20_RANGE_500DPS, or
         L3DS20_RANGE_2000DPS
+
+    :param int rate: a rate value one of L3DS20_RATE_100HZ (default), L3DS20_RATE_200HZ,
+        L3DS20_RATE_400HZ, or L3DS20_RATE_800HZ
     """
 
-    def __init__(self, rng=L3DS20_RANGE_250DPS):
+    def __init__(self, rng=L3DS20_RANGE_250DPS, rate=L3DS20_RATE_100HZ):
         chip_id = self.read_register(_ID_REGISTER)
         if chip_id not in (_L3GD20_CHIP_ID, _L3GD20H_CHIP_ID):
             raise RuntimeError(
@@ -119,7 +127,7 @@ class L3GD20:
         #     0  XEN       X-axis enable (0 = disabled, 1 = enabled)
 
         # Switch to normal mode and enable all three channels
-        self.write_register(_L3GD20_REGISTER_CTRL_REG1, 0x0F)
+        self.write_register(_L3GD20_REGISTER_CTRL_REG1, rate | 0x0F)
 
         # Set CTRL_REG2 (0x21)
         # ====================================================================
@@ -212,12 +220,14 @@ class L3GD20_I2C(L3GD20):
     gyro_raw = Struct(_L3GD20_REGISTER_OUT_X_L_X80, "<hhh")
     """Gives the raw gyro readings, in units of rad/s."""
 
-    def __init__(self, i2c, rng=L3DS20_RANGE_250DPS, address=0x6B):
+    def __init__(
+        self, i2c, rng=L3DS20_RANGE_250DPS, address=0x6B, rate=L3DS20_RATE_100HZ
+    ):
         import adafruit_bus_device.i2c_device as i2c_device  # pylint: disable=import-outside-toplevel
 
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
         self.buffer = bytearray(2)
-        super().__init__(rng)
+        super().__init__(rng, rate)
 
     def write_register(self, register, value):
         """
@@ -254,13 +264,20 @@ class L3GD20_SPI(L3GD20):
     :param baudrate: spi baud rate default is 100000
     """
 
-    def __init__(self, spi_busio, cs, rng=L3DS20_RANGE_250DPS, baudrate=100000):
+    def __init__(
+        self,
+        spi_busio,
+        cs,
+        rng=L3DS20_RANGE_250DPS,
+        baudrate=100000,
+        rate=L3DS20_RATE_100HZ,
+    ):  # pylint: disable=too-many-arguments
         import adafruit_bus_device.spi_device as spi_device  # pylint: disable=import-outside-toplevel
 
         self._spi = spi_device.SPIDevice(spi_busio, cs, baudrate=baudrate)
         self._spi_bytearray1 = bytearray(1)
         self._spi_bytearray6 = bytearray(6)
-        super().__init__(rng)
+        super().__init__(rng, rate)
 
     def write_register(self, register, value):
         """
