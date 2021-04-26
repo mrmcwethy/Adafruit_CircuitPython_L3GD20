@@ -56,33 +56,30 @@ Usage Example
 
 Of course, you must import the library to use it:
 
-.. code:: python
+.. code:: python3
 
     import adafruit_l3gd20
 
 
-This driver takes an instantiated and active I2C object (from the `busio` or
-the `bitbangio` library) as an argument to its constructor.  The way to create
-an I2C object depends on the board you are using. For boards with labeled SCL
-and SDA pins, you can:
+This driver takes an instantiated and active I2C object as an argument
+to its constructor.
 
-.. code:: python
+.. code:: python3
 
-    from busio import I2C
-    from board import SDA, SCL
+    import board
 
-    i2c = I2C(SCL, SDA)
+    i2c = board.I2C()
 
 Once you have the I2C object, you can create the sensor object:
 
-.. code:: python
+.. code:: python3
 
     sensor = adafruit_l3gd20.L3GD20_I2C(i2c)
 
 
 And then you can start reading the measurements:
 
-.. code:: python
+.. code:: python3
 
     print(sensor.gyro)
 

@@ -18,12 +18,12 @@ Implementation Notes
 
 **Hardware:**
 
-* `L3GD20H Triple-Axis Gyro Breakout Board <https://www.adafruit.com/product/1032>`_
+* Adafruit `L3GD20H Triple-Axis Gyro Breakout Board <https://www.adafruit.com/product/1032>`_
 
 **Software and Dependencies:**
 
 * Adafruit CircuitPython firmware for the supported boards:
-  https://github.com/adafruit/circuitpython/releases
+  https://circuitpython.org/downloads
 
 
 * Adafruit's Register library: https://github.com/adafruit/Adafruit_CircuitPython_Register
@@ -77,11 +77,22 @@ class L3GD20:
     """
     Driver for the L3GD20 3-axis Gyroscope sensor.
 
-    :param int rng: a range value one of L3DS20_RANGE_250DPS (default), L3DS20_RANGE_500DPS, or
-        L3DS20_RANGE_2000DPS
+    :param int rng: a range value one of:
 
-    :param int rate: a rate value one of L3DS20_RATE_100HZ (default), L3DS20_RATE_200HZ,
-        L3DS20_RATE_400HZ, or L3DS20_RATE_800HZ
+                    * :const:`L3DS20_RANGE_250DPS`
+                    * :const:`L3DS20_RANGE_500DPS`
+                    * :const:`L3DS20_RANGE_2000DPS`
+
+                    Defaults to :const:`L3DS20_RANGE_250DPS`
+
+    :param int rate: a rate value one of
+
+                    * :const:`L3DS20_RATE_100HZ`
+                    * :const:`L3DS20_RATE_200HZ`
+                    * :const:`L3DS20_RATE_400HZ`
+                    * :const:`L3DS20_RATE_800HZ`
+
+                    Defaults to :const:`L3DS20_RATE_100HZ`
     """
 
     def __init__(self, rng=L3DS20_RANGE_250DPS, rate=L3DS20_RATE_100HZ):
@@ -194,10 +205,35 @@ class L3GD20_I2C(L3GD20):
     """
     Driver for L3GD20 Gyroscope using I2C communications
 
-    :param ~busio.I2C i2c: initialized busio I2C class
-    :param int rng: the optional range value: L3DS20_RANGE_250DPS(default), L3DS20_RANGE_500DPS, or
-        L3DS20_RANGE_2000DPS
-    :param address: the optional device address, 0x68 is the default address
+    :param ~busio.I2C i2c: The I2C bus the device is connected to
+    :param int rng: range value. Defaults to :const:`0x68`
+    :param int rate: rate value. Defaults to :const:`L3DS20_RATE_100HZ`
+
+
+    **Quickstart: Importing and using the device**
+
+        Here is an example of using the :class:`L3GD20_I2C` class.
+        First you will need to import the libraries to use the sensor
+
+        .. code-block:: python
+
+            import board
+            import adafruit_l3gd20
+
+        Once this is done you can define your `board.I2C` object and define your sensor object
+
+        .. code-block:: python
+
+            i2c = board.I2C()  # uses board.SCL and board.SDA
+            sensor = adafruit_l3gd20.L3GD20_I2C(i2c)
+
+        Now you have access to the :attr:`gyro` attribute
+
+        .. code-block:: python
+
+            gyro_data = sensor.gyro
+
+
     """
 
     gyro_raw = Struct(_L3GD20_REGISTER_OUT_X_L_X80, "<hhh")
@@ -240,11 +276,36 @@ class L3GD20_SPI(L3GD20):
     """
     Driver for L3GD20 Gyroscope using SPI communications
 
-    :param ~busio.SPI spi_busio: initialized busio SPI class
+    :param ~busio.SPI spi_busio: The SPI bus the device is connected to
     :param ~digitalio.DigitalInOut cs: digital in/out to use as chip select signal
-    :param int rng: the optional range value: L3DS20_RANGE_250DPS(default), L3DS20_RANGE_500DPS, or
-        L3DS20_RANGE_2000DPS
-    :param baudrate: spi baud rate default is 100000
+    :param int rng: range value. Defaults to :const:`L3DS20_RANGE_250DPS`.
+    :param baudrate: SPI baud rate. Defaults to :const:`100000`
+    :param int rate: rate value. Defaults to :const:`L3DS20_RATE_100HZ`
+
+    **Quickstart: Importing and using the device**
+
+        Here is an example of using the :class:`L3GD20_SPI` class.
+        First you will need to import the libraries to use the sensor
+
+        .. code-block:: python
+
+            import board
+            import adafruit_l3gd20
+
+        Once this is done you can define your `board.SPI` object and define your sensor object
+
+        .. code-block:: python
+
+            spi = board.SPI()
+            sensor = adafruit_l3gd20.L3GD20_SPI(spi)
+
+        Now you have access to the :attr:`gyro` attribute
+
+        .. code-block:: python
+
+            gyro_data = sensor.gyro
+
+
     """
 
     def __init__(

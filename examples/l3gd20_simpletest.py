@@ -3,11 +3,10 @@
 
 import time
 import board
-import busio
 import adafruit_l3gd20
 
 # Hardware I2C setup:
-I2C = busio.I2C(board.SCL, board.SDA)
+I2C = board.I2C()  # uses board.SCL and board.SDA
 # Initializes L3GD20 object using default range, 250dps
 SENSOR = adafruit_l3gd20.L3GD20_I2C(I2C)
 # Initialize L3GD20 object using a custom range and output data rate (ODR).
@@ -29,7 +28,7 @@ SENSOR = adafruit_l3gd20.L3GD20_I2C(I2C)
 # Hardware SPI setup:
 # import digitalio
 # CS = digitalio.DigitalInOut(board.D5)
-# SPIB = busio.SPI(board.SCK, board.MOSI, board.MISO)
+# SPIB = board.SPI()
 # SENSOR = adafruit_l3gd20.L3GD20_SPI(SPIB, CS)
 # SENSOR = adafruit_l3gd20.L3GD20_I2C(
 #    SPIB,
