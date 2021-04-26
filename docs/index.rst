@@ -23,7 +23,7 @@ Table of Contents
 .. toctree::
     :caption: Tutorials
 
-    Adafruit Triple Axis Gyro Breakout <https://learn.adafruit.com/adafruit-triple-axis-gyro-breakout>
+    Adafruit Triple Axis Gyro Breakout Learning Guide <https://learn.adafruit.com/adafruit-triple-axis-gyro-breakout>
 
 .. toctree::
     :caption: Related Products
