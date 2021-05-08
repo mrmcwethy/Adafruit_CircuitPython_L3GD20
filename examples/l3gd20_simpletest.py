@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
+import math
 import time
 import board
 import adafruit_l3gd20
@@ -38,6 +39,14 @@ SENSOR = adafruit_l3gd20.L3GD20_I2C(I2C)
 # )
 
 while True:
-    print("Angular Momentum (rad/s): {}".format(SENSOR.gyro))
+    value_DPS = SENSOR.gyro
+    value_rds = (
+        SENSOR.gyro[0] * math.pi / 180,
+        SENSOR.gyro[1] * math.pi / 180,
+        SENSOR.gyro[2] * math.pi / 180,
+    )
+    print("Dynamic Range (DPS): {}".format(value_DPS))
+    print("-------------------------------------------------------------")
+    print("Angular Velocity (rad/s) {}".format(value_rds))
     print()
     time.sleep(1)

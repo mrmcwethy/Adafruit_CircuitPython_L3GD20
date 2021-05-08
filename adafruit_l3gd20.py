@@ -364,7 +364,7 @@ class L3GD20_SPI(L3GD20):
 
     @property
     def gyro_raw(self):
-        """Gives the raw gyro readings, in units of rad/s."""
+        """Gives the dynamic rate raw gyro readings, in units of DPS."""
         buffer = self._spi_bytearray6
         self.read_bytes(_L3GD20_REGISTER_OUT_X_L_X40, buffer)
         return unpack("<hhh", buffer)
