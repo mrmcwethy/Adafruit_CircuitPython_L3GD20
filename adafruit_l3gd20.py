@@ -35,6 +35,7 @@ __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_l3gd20.git"
 
 
+from math import radians
 from micropython import const
 from adafruit_register.i2c_struct import Struct
 
@@ -195,10 +196,10 @@ class L3GD20:
     def gyro(self):
         """
         x, y, z angular momentum tuple floats, rescaled appropriately for
-        range selected
+        range selected in rad/s
         """
         raw = self.gyro_raw
-        return tuple(self.scale * v for v in raw)
+        return tuple(radians(self.scale * v) for v in raw)
 
 
 class L3GD20_I2C(L3GD20):
@@ -364,7 +365,7 @@ class L3GD20_SPI(L3GD20):
 
     @property
     def gyro_raw(self):
-        """Gives the dynamic rate raw gyro readings, in units of DPS."""
+        """Gives the dynamic rate raw gyro readings, in units rad/s."""
         buffer = self._spi_bytearray6
         self.read_bytes(_L3GD20_REGISTER_OUT_X_L_X40, buffer)
-        return unpack("<hhh", buffer)
+        return tuple(radians(x) for x in unpack("<hhh", buffer))
