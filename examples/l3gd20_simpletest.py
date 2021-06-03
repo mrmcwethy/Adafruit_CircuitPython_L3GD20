@@ -38,6 +38,6 @@ SENSOR = adafruit_l3gd20.L3GD20_I2C(I2C)
 # )
 
 while True:
-    print("Angular Momentum (rad/s): {}".format(SENSOR.gyro))
+    print("Angular Velocity (rad/s): {}".format(SENSOR.gyro))
     print()
     time.sleep(1)
