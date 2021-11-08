@@ -243,7 +243,9 @@ class L3GD20_I2C(L3GD20):
     def __init__(
         self, i2c, rng=L3DS20_RANGE_250DPS, address=0x6B, rate=L3DS20_RATE_100HZ
     ):
-        import adafruit_bus_device.i2c_device as i2c_device  # pylint: disable=import-outside-toplevel
+        from adafruit_bus_device import (  # pylint: disable=import-outside-toplevel
+            i2c_device,
+        )
 
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
         self.buffer = bytearray(2)
@@ -317,7 +319,9 @@ class L3GD20_SPI(L3GD20):
         baudrate=100000,
         rate=L3DS20_RATE_100HZ,
     ):  # pylint: disable=too-many-arguments
-        import adafruit_bus_device.spi_device as spi_device  # pylint: disable=import-outside-toplevel
+        from adafruit_bus_device import (  # pylint: disable=import-outside-toplevel
+            spi_device,
+        )
 
         self._spi = spi_device.SPIDevice(spi_busio, cs, baudrate=baudrate)
         self._spi_bytearray1 = bytearray(1)
