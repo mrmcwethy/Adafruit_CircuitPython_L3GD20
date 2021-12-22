@@ -30,19 +30,11 @@ Implementation Notes
 """
 
 # imports
-
-__version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_l3gd20.git"
-
-
 from math import radians
+from struct import unpack
+
 from micropython import const
 from adafruit_register.i2c_struct import Struct
-
-try:
-    from struct import unpack
-except ImportError:
-    from ustruct import unpack
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_L3GD20.git"
