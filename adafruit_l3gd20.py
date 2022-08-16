@@ -36,7 +36,7 @@ from struct import unpack
 from micropython import const
 from adafruit_register.i2c_struct import Struct
 
-__version__ = "0.0.0-auto.0"
+__version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_L3GD20.git"
 
 L3DS20_RANGE_250DPS = const(0)
