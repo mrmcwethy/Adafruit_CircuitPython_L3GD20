@@ -40,6 +40,7 @@ try:
     from typing import Tuple
     from digitalio import DigitalInOut
     from busio import I2C, SPI
+    from circuitpython_typing import WriteableBuffer
 except ImportError:
     pass
 
@@ -358,7 +359,7 @@ class L3GD20_SPI(L3GD20):
             # print("$%02X => %s" % (register, [hex(i) for i in self._spi_bytearray1]))
             return self._spi_bytearray1[0]
 
-    def read_bytes(self, register: int, buffer: bytearray) -> None:
+    def read_bytes(self, register: int, buffer: WriteableBuffer) -> None:
         """
         Low level register stream reading over SPI, returns a list of values
 
