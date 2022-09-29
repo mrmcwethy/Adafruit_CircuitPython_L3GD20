@@ -36,6 +36,14 @@ from struct import unpack
 from micropython import const
 from adafruit_register.i2c_struct import Struct
 
+try:
+    from typing import Tuple
+    from digitalio import DigitalInOut
+    from busio import I2C, SPI
+    from circuitpython_typing import WriteableBuffer
+except ImportError:
+    pass
+
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_L3GD20.git"
 
@@ -88,12 +96,13 @@ class L3GD20:
                     Defaults to :const:`L3DS20_RATE_100HZ`
     """
 
-    def __init__(self, rng=L3DS20_RANGE_250DPS, rate=L3DS20_RATE_100HZ):
+    def __init__(
+        self, rng: int = L3DS20_RANGE_250DPS, rate: int = L3DS20_RATE_100HZ
+    ) -> None:
         chip_id = self.read_register(_ID_REGISTER)
         if chip_id not in (_L3GD20_CHIP_ID, _L3GD20H_CHIP_ID):
             raise RuntimeError(
-                "bad chip id (%x != %x or %x)"
-                % (chip_id, _L3GD20_CHIP_ID, _L3GD20H_CHIP_ID)
+                f"bad chip id ({chip_id:#x} != {_L3GD20_CHIP_ID:#x} or {_L3GD20H_CHIP_ID:#x})"
             )
 
         if rng not in (L3DS20_RANGE_250DPS, L3DS20_RANGE_500DPS, L3DS20_RANGE_2000DPS):
@@ -185,7 +194,7 @@ class L3GD20:
         # ------------------------------------------------------------------
 
     @property
-    def gyro(self):
+    def gyro(self) -> Tuple[float, float, float]:
         """
         x, y, z angular momentum tuple floats, rescaled appropriately for
         range selected in rad/s
@@ -233,8 +242,12 @@ class L3GD20_I2C(L3GD20):
     """Gives the raw gyro readings, in units of rad/s."""
 
     def __init__(
-        self, i2c, rng=L3DS20_RANGE_250DPS, address=0x6B, rate=L3DS20_RATE_100HZ
-    ):
+        self,
+        i2c: I2C,
+        rng: int = L3DS20_RANGE_250DPS,
+        address: int = 0x6B,
+        rate: int = L3DS20_RATE_100HZ,
+    ) -> None:
         from adafruit_bus_device import (  # pylint: disable=import-outside-toplevel
             i2c_device,
         )
@@ -243,7 +256,7 @@ class L3GD20_I2C(L3GD20):
         self.buffer = bytearray(2)
         super().__init__(rng, rate)
 
-    def write_register(self, register, value):
+    def write_register(self, register: int, value: int) -> None:
         """
         Update a register with a byte value
 
@@ -255,7 +268,7 @@ class L3GD20_I2C(L3GD20):
         with self.i2c_device as i2c:
             i2c.write(self.buffer)
 
-    def read_register(self, register):
+    def read_register(self, register: int) -> int:
         """
         Returns a byte value from a register
 
@@ -303,14 +316,14 @@ class L3GD20_SPI(L3GD20):
 
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
-        spi_busio,
-        cs,
-        rng=L3DS20_RANGE_250DPS,
-        baudrate=100000,
-        rate=L3DS20_RATE_100HZ,
-    ):  # pylint: disable=too-many-arguments
+        spi_busio: SPI,
+        cs: DigitalInOut,
+        rng: int = L3DS20_RANGE_250DPS,
+        baudrate: int = 100000,
+        rate: int = L3DS20_RATE_100HZ,
+    ) -> None:
         from adafruit_bus_device import (  # pylint: disable=import-outside-toplevel
             spi_device,
         )
@@ -320,7 +333,7 @@ class L3GD20_SPI(L3GD20):
         self._spi_bytearray6 = bytearray(6)
         super().__init__(rng, rate)
 
-    def write_register(self, register, value):
+    def write_register(self, register: int, value: int) -> None:
         """
         Low level register writing over SPI, writes one 8-bit value
 
@@ -331,7 +344,7 @@ class L3GD20_SPI(L3GD20):
         with self._spi as spi:
             spi.write(bytes([register, value & 0xFF]))
 
-    def read_register(self, register):
+    def read_register(self, register: int) -> int:
         """
         Low level register reading over SPI, returns a list of values
 
@@ -346,7 +359,7 @@ class L3GD20_SPI(L3GD20):
             # print("$%02X => %s" % (register, [hex(i) for i in self._spi_bytearray1]))
             return self._spi_bytearray1[0]
 
-    def read_bytes(self, register, buffer):
+    def read_bytes(self, register: int, buffer: WriteableBuffer) -> None:
         """
         Low level register stream reading over SPI, returns a list of values
 
@@ -360,7 +373,7 @@ class L3GD20_SPI(L3GD20):
             spi.readinto(buffer)
 
     @property
-    def gyro_raw(self):
+    def gyro_raw(self) -> Tuple[int, int, int]:
         """Gives the dynamic rate raw gyro readings, in units rad/s."""
         buffer = self._spi_bytearray6
         self.read_bytes(_L3GD20_REGISTER_OUT_X_L_X40, buffer)
